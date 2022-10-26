@@ -8,8 +8,12 @@ template::install() {
     return 1
   fi
 
-  local template_url="${PLUGIN_TEMPLATE_REPO_PREFIX}${typ}"
+  local template_url="${PLUGIN_TEMPLATE_REPO_PREFIX}${name}"
   local instance_path="$PLUGIN_PKGS/$name"
+
+  log::debug "[$(timestamp)] name: $name"
+  log::debug "[$(timestamp)] template_url: $template_url"
+  log::debug "[$(timestamp)] instance_path: $instance_path"
 
   if [ -d "$instance_path" ]; then
     log::info "[$(timestamp)] template $name installed"
@@ -21,10 +25,6 @@ template::install() {
     return 1
   fi
 
-  log::debug "[$(timestamp)] name: $name"
-  log::debug "[$(timestamp)] template_url: $template_url"
-  log::debug "[$(timestamp)] instance_path: $instance_path"
-
   git::clone $instance_path $template_url
   if [ "$?" != "0" ] || [ ! -d "$instance_path" ]; then
     log::error "[$(timestamp)] failed to install template $name."
@@ -34,4 +34,4 @@ template::install() {
   log::success "[$(timestamp)] succeed to install template $name."
 }
 
-export -f template::create
+export -f template::install
