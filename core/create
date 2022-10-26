@@ -1,0 +1,62 @@
+#!/bin/bash
+
+template::create() {
+  local typ=$1
+  local name=$2
+
+  local types=(
+    "plugin"
+    "package"
+    "service"
+    "xvm"
+  )
+
+  if [ -z "$typ" ]; then
+    os::inquirer typ "select" types "Select template type" true
+  fi
+
+  if [ -z "$name" ]; then
+    os::inquirer name "text" "Input template name" true
+  fi
+
+  local template_url="${PLUGIN_TEMPLATE_REPO_PREFIX}${typ}"
+  local instance_path="$ZMICRO_PLUGINS_PATH/$typ/${typ}s/$name"
+  if [ "$typ" = "plugin" ]; then
+    instance_path="$ZMICRO_PLUGINS_PATH/$name"
+  fi
+
+  if [ -d "$instance_path" ]; then
+    log::error "[$(timestamp)] $typ(name: $name) is already exist, please use another name."
+    return 1
+  fi
+
+  if [ "$(net::is_not_found $template_url)" = "true" ]; then
+    log::error "[$(timestamp)] template ($typ) is not found"
+    return 1
+  fi
+
+  log::debug "[$(timestamp)] typ: $typ"
+  log::debug "[$(timestamp)] name: $name"
+  log::debug "[$(timestamp)] template_url: $template_url"
+  log::debug "[$(timestamp)] instance_path: $instance_path"
+
+  git::clone $instance_path $template_url
+  if [ "$?" != "0" ] || [ ! -d "$instance_path" ]; then
+    log::error "[$(timestamp)] failed to create $name with template $type."
+    return 1
+  fi
+
+  # clean .git
+  rm -rf $instance_path/.git
+
+  # re init
+  cd $instance_path
+  git init >>/dev/null 2>&1
+
+  os::copy $instance_path
+
+  log::success "[$(timestamp)] succeed to create $name at: $instance_path (copied to clipboard)"
+
+}
+
+export -f template::create

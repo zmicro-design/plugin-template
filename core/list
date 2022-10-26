@@ -1,0 +1,7 @@
+#!/bin/bash
+
+template::list() {
+  ls $PLUGIN_TEMPLATE_VERSIONS
+}
+
+export -f template::list

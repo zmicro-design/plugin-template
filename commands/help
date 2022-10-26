@@ -1,0 +1,41 @@
+#!/bin/bash
+
+name() {
+  local version=$(plugin::get_version $PLUGIN_TEMPLATE_NAME)
+  echo "Template Manager ($(color::success $version))"
+}
+
+description() {
+  echo "Template Manager is a tool for creating zmicro plugin/package/service ..."
+}
+
+usage() {
+  echo "Usage:"
+  echo "  zmicro template <action> [args...]"
+  echo ""
+  echo "Action:"
+  echo "  create              - Create a instance from template"
+  echo "  ls                  - List all avaliable templates"
+  echo "  help                - Show help"
+}
+
+example() {
+  echo "Example:"
+  echo "  zmicro template create"
+}
+
+core() {
+  name
+  echo ""
+  description
+  echo ""
+  usage
+  echo ""
+  example
+}
+
+run() {
+  core $@
+}
+
+run $@

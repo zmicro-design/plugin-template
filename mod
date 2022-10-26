@@ -1,0 +1,3 @@
+PLUGIN_NAME=template
+PLUGIN_DESCRIPTION="template plugin"
+PLUGIN_VERSION=v0.0.0
