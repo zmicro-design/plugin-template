@@ -1,0 +1,27 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  template install <name>"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  local name=$1
+  if [ -z "$name" ]; then
+    log::error "template name is required"
+    return 1
+  fi
+
+  template::install $name
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"

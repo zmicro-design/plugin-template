@@ -5,3 +5,4 @@ export PLUGIN_TEMPLATE_LOGS=$(plugin::get_app_logs_path $PLUGIN_TEMPLATE_NAME)
 export PLUGIN_TEMPLATE_CONFIG=$(plugin::get_app_configs_path $PLUGIN_TEMPLATE_NAME)/config
 
 export PLUGIN_TEMPLATE_REPO_PREFIX=https://github.com/zmicro-design/template-
+
