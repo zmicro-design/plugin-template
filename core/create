@@ -52,6 +52,10 @@ template::create() {
   # re init
   cd $instance_path
   git init >>/dev/null 2>&1
+  # add remote repository url
+  git remote add origin https://github.com/zmicro-design/package-${name}
+
+  # @TODO change info
 
   os::copy $instance_path
 
