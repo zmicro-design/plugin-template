@@ -59,8 +59,15 @@ template::create() {
 
   os::copy $instance_path
 
-  log::success "[$(timestamp)] succeed to create $name at: $instance_path (copied to clipboard)"
-
+  local code_command=$(color::green "zmicro ${typ} code $name")
+  local go_command=$(color::green "zmicro ${typ} go $name")
+  log::success "[$(timestamp)] succeed to create $name (copied dir path to clipboard)"
+  log::info "now you can run:"
+  log::info "   $code_command"
+  log::info "       => open with vscode"
+  log::info ""
+  log::info "   $go_command"
+  log::info "       => go the dir in terminal."
 }
 
 export -f template::create
