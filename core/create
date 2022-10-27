@@ -62,18 +62,13 @@ template::create() {
   git remote add origin https://github.com/zmicro-design/package-${name}
 
   # create repository
-  os::curl \
-    -X POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer $GITHUB_TOKEN"  \
-    -d "{\"name\":\"$typ-$name\",\"private\": false,\"org\": \"$PLUGIN_TEMPLATE_REPO_ORGANIZATION\" }" \
-    https://api.github.com/orgs/$PLUGIN_TEMPLATE_REPO_ORGANIZATION/repos >>/dev/null 2>&1
+  github::create_repository "$PLUGIN_TEMPLATE_REPO_ORGANIZATION" "$typ-$name"
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] failed to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
     return 1
   fi
 
-  log::info "[$(timestamp)] succeed to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
+  log::info "[$(timestamp)] succeed to create repository: https://github.com/$PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
 
   # @TODO change info
 
