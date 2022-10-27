@@ -6,3 +6,4 @@ export PLUGIN_TEMPLATE_CONFIG=$(plugin::get_app_configs_path $PLUGIN_TEMPLATE_NA
 
 export PLUGIN_TEMPLATE_REPO_PREFIX=https://github.com/zmicro-design/template-
 
+export PLUGIN_TEMPLATE_REPO_ORGANIZATION=zmicro-design

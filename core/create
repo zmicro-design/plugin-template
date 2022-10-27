@@ -30,6 +30,12 @@ template::create() {
     return 1
   fi
 
+  github::get_token
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] cannot get github token(detail: $GITHUB_TOKEN)"
+    return 1
+  fi
+
   if [ "$(net::is_not_found $template_url)" = "true" ]; then
     log::error "[$(timestamp)] template ($typ) is not found"
     return 1
@@ -54,6 +60,20 @@ template::create() {
   git init >>/dev/null 2>&1
   # add remote repository url
   git remote add origin https://github.com/zmicro-design/package-${name}
+
+  # create repository
+  os::curl \
+    -X POST \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer $GITHUB_TOKEN"  \
+    -d "{\"name\":\"$typ-$name\",\"private\": false,\"org\": \"$PLUGIN_TEMPLATE_REPO_ORGANIZATION\" }" \
+    https://api.github.com/orgs/$PLUGIN_TEMPLATE_REPO_ORGANIZATION/repos >>/dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] failed to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
+    return 1
+  fi
+
+  log::info "[$(timestamp)] succeed to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
 
   # @TODO change info
 
