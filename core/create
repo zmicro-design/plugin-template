@@ -19,8 +19,14 @@ template::create() {
     os::inquirer name "text" "Input template name" true
   fi
 
+  local instance_dir="$ZMICRO_PLUGINS_PATH/$typ/${typ}s"
+  if [ ! -w "$instance_dir" ] || [ ! -r "$instance_dir" ]; then
+    sudo chown -R $USER $instance_dir
+  fi
+
   local template_url="${PLUGIN_TEMPLATE_REPO_PREFIX}${typ}"
-  local instance_path="$ZMICRO_PLUGINS_PATH/$typ/${typ}s/$name"
+  local instance_path="$instance_dir/$name"
+  local template_tmp_path=$(os::tmp_dir)
   if [ "$typ" = "plugin" ]; then
     instance_path="$ZMICRO_PLUGINS_PATH/$name"
   fi
@@ -46,14 +52,19 @@ template::create() {
   log::debug "[$(timestamp)] template_url: $template_url"
   log::debug "[$(timestamp)] instance_path: $instance_path"
 
-  git::clone $instance_path $template_url
-  if [ "$?" != "0" ] || [ ! -d "$instance_path" ]; then
+  git::clone $template_tmp_path $template_url
+  if [ "$?" != "0" ] || [ ! -d "$template_tmp_path" ]; then
     log::error "[$(timestamp)] failed to create $name with template $type."
+    return 1
+  fi
+  cp -rf $template_tmp_path/template $instance_path
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] failed to copy files."
     return 1
   fi
 
   # clean .git
-  rm -rf $instance_path/.git
+  # rm -rf $instance_path/.git
 
   # re init
   cd $instance_path
