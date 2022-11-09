@@ -36,12 +36,14 @@ template::create() {
     return 1
   fi
 
+  log::debug "[$(timestamp)] check github token ..."
   github::get_token
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] cannot get github token(detail: $GITHUB_TOKEN)"
     return 1
   fi
 
+  log::debug "[$(timestamp)] check template($template_url) whether exists ..."
   if [ "$(net::is_not_found $template_url)" = "true" ]; then
     log::error "[$(timestamp)] template ($typ) is not found"
     return 1
