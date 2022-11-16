@@ -19,8 +19,11 @@ template::create() {
     os::inquirer name "text" "Input template name" true
   fi
 
+  log::info "[$(timestamp)] creating $typ(name: $name) ..."
+
   local instance_dir="$ZMICRO_PLUGINS_PATH/$typ/${typ}s"
-  if [ ! -w "$instance_dir" ] || [ ! -r "$instance_dir" ]; then
+  log::debug "[$(timestamp)] check instance dir permissions: $instance_dir ..."
+  if [ ! -w "$instance_dir" ]; then
     sudo chown -R $USER $instance_dir
   fi
 
@@ -89,7 +92,7 @@ template::create() {
 
   local code_command=$(color::green "zmicro ${typ} code $name")
   local go_command=$(color::green "zmicro ${typ} go $name")
-  log::success "[$(timestamp)] succeed to create $name (copied dir path to clipboard)"
+  log::success "[$(timestamp)] succeed to create $typ(name: $name) (copied dir path to clipboard)"
   log::info "now you can run:"
   log::info "   $code_command"
   log::info "       => open with vscode"
