@@ -2,7 +2,7 @@
 
 help() {
   echo "Usage:"
-  echo "  template create"
+  echo "  template create [type] [name]"
 }
 
 core() {
@@ -11,11 +11,11 @@ core() {
     exit 0
   fi
 
-  template::create
+  template::create "$@"
 }
 
 run() {
-  core $@
+  core "$@"
 }
 
-run $@
+run "$@"
