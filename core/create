@@ -16,7 +16,7 @@ template::create() {
   fi
 
   if [ -z "$name" ]; then
-    os::inquirer name "text" "Input template name" true
+    os::inquirer name "text" "Input $typ name" true
   fi
 
   log::info "[$(timestamp)] creating $typ(name: $name) ..."
