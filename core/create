@@ -78,13 +78,13 @@ template::create() {
   git remote add origin https://github.com/zmicro-design/${typ}-${name}
 
   # create repository
+  log::info "[$(timestamp)] start to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
   github::create_repository "$PLUGIN_TEMPLATE_REPO_ORGANIZATION" "$typ-$name"
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] failed to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
     return 1
   fi
-
-  log::info "[$(timestamp)] succeed to create repository: https://github.com/$PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
+  log::info "[$(timestamp)] succeed to create repository"
 
   # @TODO change info
 
