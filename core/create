@@ -89,10 +89,10 @@ template::create() {
   # @TODO change info
   # os::copy $instance_path
 
+  os::copy "zmicro ${typ} code $name"
+
   local code_command=$(color::green "zmicro ${typ} code $name")
   local go_command=$(color::green "zmicro ${typ} go $name")
-
-  os::copy "$code_command"
 
   log::success "[$(timestamp)] succeed to create $typ(name: $name) (copied dir path to clipboard)"
   log::info "now you can run:"
