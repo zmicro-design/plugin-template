@@ -39,24 +39,25 @@ template::create() {
     return 1
   fi
 
-  log::debug "[$(timestamp)] check github token ..."
+  log::info "[$(timestamp)] checking github token ..."
   github::get_token
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] cannot get github token(detail: $GITHUB_TOKEN)"
     return 1
   fi
 
-  log::debug "[$(timestamp)] check template($template_url) whether exists ..."
+  log::info "[$(timestamp)] checking template($template_url) whether exists ..."
   if [ "$(net::is_not_found $template_url)" = "true" ]; then
     log::error "[$(timestamp)] template ($typ) is not found"
     return 1
   fi
 
-  log::debug "[$(timestamp)] typ: $typ"
-  log::debug "[$(timestamp)] name: $name"
-  log::debug "[$(timestamp)] template_url: $template_url"
-  log::debug "[$(timestamp)] instance_path: $instance_path"
+  log::info "[$(timestamp)] typ: $typ"
+  log::info "[$(timestamp)] name: $name"
+  log::info "[$(timestamp)] template_url: $template_url"
+  log::info "[$(timestamp)] instance_path: $instance_path"
 
+  log::info "[$(timestamp)] cloning template to => $template_tmp_path  ..."
   git::clone $template_tmp_path $template_url
   if [ "$?" != "0" ] || [ ! -d "$template_tmp_path" ]; then
     log::error "[$(timestamp)] failed to create $name with template $type."
@@ -74,11 +75,13 @@ template::create() {
   # re init
   cd $instance_path
   git init >>/dev/null 2>&1
+
   # add remote repository url
-  git remote add origin https://github.com/zmicro-design/${typ}-${name}
+  local remote_repository_url="https://github.com/$PLUGIN_TEMPLATE_REPO_ORGANIZATION/${typ}-${name}"
+  git remote add origin $remote_repository_url
 
   # create repository
-  log::info "[$(timestamp)] start to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
+  log::info "[$(timestamp)] creating remote repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name ..."
   github::create_repository "$PLUGIN_TEMPLATE_REPO_ORGANIZATION" "$typ-$name"
   if [ "$?" != "0" ]; then
     log::error "[$(timestamp)] failed to create repository: $PLUGIN_TEMPLATE_REPO_ORGANIZATION/$typ-$name"
